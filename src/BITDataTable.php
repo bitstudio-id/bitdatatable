@@ -6,7 +6,7 @@
  * Time: 15:00
  */
 
-namespace BITStudio\Repository;
+namespace BITStudio\BITDataTable;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;

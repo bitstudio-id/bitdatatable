@@ -1,5 +1,5 @@
 {
-    "name": "BITStudio/Repository",
+    "name": "bitstudio-id/bitdatatable",
     "description": "A simple way to implement datatable with query builder",
     "type": "library",
     "require": {},
@@ -12,7 +12,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "BITStudio\\Repository\\": "src/"
+            "BITStudio\\BITDataTable\\": "src/"
         }
     }
 }

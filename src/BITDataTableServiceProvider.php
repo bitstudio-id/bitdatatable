@@ -6,7 +6,7 @@
  * Time: 14:50
  */
 
-namespace BITStudio\Repository;
+namespace BITStudio\BITDataTable;
 
 use Illuminate\Support\ServiceProvider;
 
