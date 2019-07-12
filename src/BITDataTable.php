@@ -17,6 +17,9 @@ class BITDataTable
     private $data;
     private $request;
 
+    /*
+     * $q = QUERY
+     * */
     private $q;
     private $query;
     private $qFilter;
@@ -40,6 +43,9 @@ class BITDataTable
         return $this->rowIndexName;
     }
 
+    /*
+     * DEFAULT CONSTRUCTOR IS EMPTY
+     * */
     public function __construct()
     {
         $this->mapColumn = [];
