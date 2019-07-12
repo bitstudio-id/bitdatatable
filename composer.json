@@ -1,0 +1,18 @@
+{
+    "name": "BITStudio/Repository",
+    "description": "A simple way to implement datatable with query builder",
+    "type": "library",
+    "require": {},
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cacing69",
+            "email": "cacingworm69@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "BITStudio\\Repository\\": "src/"
+        }
+    }
+}
