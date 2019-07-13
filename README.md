@@ -73,6 +73,9 @@ composer require bitstudio-id/bitdatatable
 
 ## How to use with eloquent
 ```php
+use BITStudio\BITDataTable\BITDataTable;
+...
+...
 public function dtbGetV2(Request $request)
 {
   $dtb = new BITDataTable();
@@ -83,19 +86,39 @@ public function dtbGetV2(Request $request)
   $user = User::query()->with('employee', 'employee.role');
 
   $dtb->from($user);
+  
+  $state = "admin";
 
   $dtb->addCol(function ($user){
-    $item->action = "<a target='_blank' href='//lorem.com/{$user->id}' class='btn btn-danger'>action-{$item->id}</a>";
-
-     return $item;
+    $user->action = "<a target='_blank' href='//lorem.com/{$user->id}' class='btn btn-danger'>action-{$item->id}</a>";
+    return $user;
   });
 
   return $dtb->generate();
 }
 ```
+
+```
+$state = "admin";
+
+$dtb->addCol(function ($user) use ($state){
+  //use logic on addCol
+      
+  //set as empty default
+  $user->admin_col = "";
+  
+  if($state == $user->role->name) {
+      $user->admin_col .= "admin-col";
+  }
+   return $user;
+});
+```
         
 ## How to use with Query Builder
 ```php 
+use BITStudio\BITDataTable\BITDataTable;
+...
+...
 public function dtbGetV2(Request $request)
   $dtb = new BITDataTable();
   
@@ -109,14 +132,31 @@ public function dtbGetV2(Request $request)
   
   
   //add custom column
-  $dtb->addCol(function ($item){
-    $item->action = "<a target='_blank' href='//google.com/{$item->id}' class='btn btn-danger'>action-{$item->id}</a>";
+  $dtb->addCol(function ($user){
+    $user->action = "<a target='_blank' href='//google.com/{$item->id}' class='btn btn-danger'>action-{$item->id}</a>";
   
-    return $item;
+    return $user;
   });
   
   return $dtb->generate();
 }
+```
+
+#### add value class attribute
+```
+$dtb->addClass("text-danger");
+```
+
+#### add value id attribute
+```
+//create custom from collection property
+$dtb->setRowId("id");
+
+//create custom from addCol or setRowId for custom id attribute
+$dtb->setRowId(function($item) {
+    $item->DT_RowId = "id-".$item->id;
+    return $item;
+});
 ```
 ## License
 The MIT License (MIT). Please see License File for more information.
