@@ -385,20 +385,20 @@ class BITDataTable
     function addWhereHas(EloquentBuilder $builder , string $relation , string $searchTerm)
     {
 //        dd(explode())
-//        $tmpRelation = explode(".", $relation);
-//        $tmp = $relation;
-//        foreach ($tmpRelation as $k => $v) {
-//            if($k == (sizeof($tmpRelation) - 1)){
-//                $builder->where($v , 'like' , "%" . strtolower($searchTerm) . "%");
-//            } else {
-//                $tmp = str_replace($v.".", "", $tmp);
-//                $builder->orWhereHas($v, function (EloquentBuilder $relation) use ($tmp, $searchTerm) {
-//                    $this->addWhereHas($relation, $tmp, $searchTerm);
-//                });
-//            }
-//        }
+        $tmpRelation = explode(".", $relation);
+        $tmp = $relation;
+        foreach ($tmpRelation as $k => $v) {
+            if($k == (sizeof($tmpRelation) - 1)){
+                $builder->where($v , 'like' , "%" . strtolower($searchTerm) . "%");
+            } else {
+                $tmp = str_replace($v.".", "", $tmp);
+                $builder->orWhereHas($v, function (EloquentBuilder $relation) use ($tmp, $searchTerm) {
+                    $this->addWhereHas($relation, $tmp, $searchTerm);
+                });
+            }
+        }
 
-//        dd($builder->toSql());
+        dd($builder->toSql());
         return $builder;
     }
 }
