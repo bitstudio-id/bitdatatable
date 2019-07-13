@@ -43,6 +43,7 @@ composer require bitstudio-id/bitdatatable
 ```
 
 ## Javascript
+```
 <script>
   $(document).ready(function () {
     //hide error/warning on datatable
@@ -69,6 +70,7 @@ composer require bitstudio-id/bitdatatable
     });
   });
 </script>
+```
 
 ## How to use with eloquent
 ```php
