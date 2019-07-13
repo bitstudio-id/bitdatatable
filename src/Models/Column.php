@@ -11,13 +11,39 @@ namespace BITStudio\BITDataTable\Models;
 
 class Column
 {
+    /**
+     * $data : data from request column.
+     *
+     * @var string
+     */
     public $data;
-    public $name;
-    public $searchable;
-    public $orderable;
 
     /**
-     * @return mixed
+     * $name : name from request column.
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * $searchable : searchable from request column.
+     *
+     * @var bool
+     */
+    public $searchable;
+
+    /**
+     * $orderable : orderable from request column.
+     *
+     * @var bool
+     */
+    public $orderable;
+
+
+    /**
+     * get data column nane
+     *
+     * @return string
      */
     public function getData() : string
     {
@@ -25,7 +51,9 @@ class Column
     }
 
     /**
-     * @param mixed $data
+     * set data column nane
+     *
+     * @param string
      */
     public function setData(string $data): void
     {
