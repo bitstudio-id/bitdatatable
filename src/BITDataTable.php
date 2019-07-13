@@ -17,35 +17,141 @@ use Illuminate\Support\Str;
 class BITDataTable
 {
     private $data;
+
+    /**
+     * DataTables request object.
+     *
+     * @var Illuminate\Http\Request
+     */
     private $request;
 
-    /*
-     * $q = QUERY
-     * */
+    /**
+     * $query : holder for count data.
+     *
+     * @var Builder
+     */
     private $q;
+
+    /**
+     * $query : holder for get data.
+     *
+     * @var Builder
+     */
     private $query;
+
+    /**
+     * $query : holder for filtered data.
+     *
+     * @var Builder
+     */
     private $qFilter;
 
-    private $queryMode = null;
+    /**
+     * $rowIndex : index identifier on response
+     *
+     * @var string
+     */
     private $rowIndex;
 
+    /**
+     * $column : array column holder, based on $request
+     *
+     * @var array
+     */
     private $column;
+
+    /**
+     * $mapColumn : mapping custom column from controller
+     *
+     * @var array
+     */
     private $mapColumn;
+
+    /**
+     * $closure : custom column handler
+     *
+     * @var \Closure
+     */
     private $closure;
+
+    /**
+     * $showTotal : show count all data
+     *
+     * @var int
+     */
     private $showTotal;
+
+    /**
+     * $showFiltered : show count filtered data
+     *
+     * @var int
+     */
     private $showFiltered;
 
+    /**
+     * $rowClass : add row class response
+     *
+     * @var ...string
+     */
+    private $rowClass;
+
+    /**
+     * $rowClassName : row class name on response
+     *
+     * @var string
+     */
+    private $rowClassName;
+
+    /**
+     * $rowId : add row id response
+     *
+     * @var string
+     */
+    private $rowId;
+
+    /**
+     * $rowIdName : row id name on response
+     *
+     * @var string
+     */
+    private $rowIdName;
+
+    /**
+     * $rowId : add row id custom response
+     *
+     * @var \Closure
+     */
+    private $rowIdClosure;
+
+    /**
+     * $rowIndexname : add row index response
+     *
+     * @var \Closure
+     */
     private $rowIndexName;
+
+    /**
+     * $searchMode : type of searching
+     * have : %string%
+     * start : string%
+     * end : %string
+     * equal : = string
+     *
+     * @var string
+     */
     private $searchMode;
 
     public function __construct()
     {
         $this->mapColumn = [];
+        $this->rowClass = [];
         $this->data = [];
         $this->showTotal = true;
         $this->showFiltered = false;
         $this->rowIndex = false;
-        $this->rowIndexName = "DT_Row_Index";
+        $this->rowIndexName = "DT_RowIndex";
+        $this->rowIdName = "DT_RowId";
+        $this->rowClassName = "DT_RowClass";
         $this->searchMode = "start";
     }
 
@@ -57,12 +163,14 @@ class BITDataTable
     /*
      * DEFAULT CONSTRUCTOR IS EMPTY
      * */
-
     public function setRowIndexName(string $name)
     {
         $this->rowIndexName = $name;
     }
 
+    /*
+     *
+     * */
     public function setRequest(Request $request)
     {
         $this->request = $request;
@@ -83,14 +191,19 @@ class BITDataTable
         return $this;
     }
 
+    public function addClass(...$string)
+    {
+        $this->rowClass = $string;
+
+        return $this;
+    }
+
     public function from($query)
     {
         if ($query instanceof QueryBuilder) {
             $this->query = $query;
-            $this->queryMode = "query_builder";
         } else if ($query instanceof EloquentBuilder) {
             $this->query = $query;
-            $this->queryMode = "eloquent";
         } else {
             dd("Class not support");
         }
@@ -115,8 +228,32 @@ class BITDataTable
 
     public function generate()
     {
+        $data = $this->closure == null ? $this->getData() : $this->getData()->map($this->closure);
 
-        $data = is_null($this->closure) ? $this->getData() : $this->getData()->map($this->closure);
+        /*ADD ROW CLASS*/
+        if(!empty($this->rowClass)) {
+            $rowClass = $this->rowClass;
+            $rowClassName = $this->rowClassName;
+            $data->map(function ($item) use ($rowClass, $rowClassName) {
+                $item->{$rowClassName} = implode(" ", $rowClass);
+                return $item;
+            });
+        }
+
+        if($this->rowIdClosure !== null) {
+            $data->map($this->rowIdClosure);
+        } elseif ($this->rowId !== null) {
+//            dd("A");
+            $rowId = $this->rowId;
+            $rowIdName = $this->rowIdName;
+
+//            dd($rowId, $rowIdName);
+            $data->map(function($item) use ($rowId, $rowIdName){
+//                dd($rowId);
+                $item->{$rowIdName} = $item->{$rowId};
+                return $item;
+            });
+        }
 
         if ($this->getRowIndex()) {
             $i = 1;
@@ -129,13 +266,17 @@ class BITDataTable
         $recordsTotal = $this->getTotalDataByQuery($this->getSql($this->q));
         $recordsFiltered = $this->getShowFiltered() ? $this->getTotalDataByQuery($this->getSql($this->qFilter)) : $recordsTotal;
 
+        if(env("APP_DEBUG")) {
+            $response["request"] = $this->request->all();
+            $response["query"] = $this->getSql($this->query);
+        }
 
-        return [
-            "data" => $data ,
-            "draw" => $this->request->draw ,
-            "recordsTotal" => $recordsTotal ,
-            "recordsFiltered" => $recordsFiltered ,
-        ];
+        $response["data"] = $data;
+        $response["draw"] = $this->request->draw;
+        $response["recordsTotal"] = $recordsTotal;
+        $response["recordsFiltered"] = $recordsFiltered;
+
+        return $response;
     }
 
     public function getData()
@@ -190,12 +331,12 @@ class BITDataTable
                                     if (sizeof($tmp) == 2) {
                                         $call->orWhereHas($tmp[0] , function (EloquentBuilder $w1) use ($tmp , $searchTerm) {
 //                                            dd($tmp[1]);
-                                            $w1->where($tmp[1] , 'like' , "%" . strtolower($searchTerm) . "%");
+                                            $w1->where($tmp[1] , 'like' , strtolower($searchTerm) . "%");
                                         });
                                     } else if (sizeof($tmp) == 3) {
                                         $call->orWhereHas($tmp[0] , function (EloquentBuilder $w1) use ($tmp , $searchTerm) {
                                             $w1->whereHas($tmp[1] , function (EloquentBuilder $w2) use ($tmp , $searchTerm) {
-                                                $w2->where($tmp[2] , 'like' , "%" . strtolower($searchTerm) . "%");
+                                                $w2->where($tmp[2] , 'like' , strtolower($searchTerm) . "%");
                                             });
                                         });
                                     } else {
@@ -223,6 +364,8 @@ class BITDataTable
                                         $call->orWhere(DB::raw("LOWER({$sourCol})") , 'like' , strtolower($searchTerm) . "%");
                                     } else if (strtolower($this->searchMode) == "end") {
                                         $call->orWhere(DB::raw("LOWER({$sourCol})") , 'like' , "%" . strtolower($searchTerm));
+                                    } else if (strtolower($this->searchMode) == "equal") {
+                                        $call->orWhere(DB::raw("LOWER({$sourCol})") , '=' , strtolower($searchTerm));
                                     }
                                 }
                             }
@@ -274,33 +417,23 @@ class BITDataTable
         return collect($this->data);
     }
 
-    public
-    function setData($data = [])
+    public function setData($data = [])
     {
         $this->data = $data;
         return $this;
     }
 
-//    public function eloquent(\Illuminate\Database\Eloquent\Builder $query)
-//    {
-//        $this->query = $query;
-//        return $this;
-//    }
-
-    public
-    function getShowFiltered(): bool
+    public function getShowFiltered(): bool
     {
         return $this->showFiltered;
     }
 
-    public
-    function setShowFiltered(bool $param): void
+    public function setShowFiltered(bool $param): void
     {
         $this->showFiltered = $param;
     }
 
-    public
-    function getSearchAbleColumn()
+    public function getSearchAbleColumn()
     {
         if (!is_null($this->column)) {
             return array_filter($this->column , function ($item) {
@@ -312,8 +445,7 @@ class BITDataTable
         }
     }
 
-    private
-    function sortDecorator(int $pos = 0)
+    private function sortDecorator(int $pos = 0)
     {
         if (!is_null($pos)) {
             $_column = $this->column;
@@ -324,14 +456,12 @@ class BITDataTable
 
     }
 
-    public
-    function getRowIndex(): bool
+    public function getRowIndex(): bool
     {
         return $this->rowIndex;
     }
 
-    public
-    function setRowIndex(bool $state): void
+    public function setRowIndex(bool $state): void
     {
         $this->rowIndex = $state;
     }
@@ -378,27 +508,21 @@ class BITDataTable
     {
         $this->searchMode = $mode;
         return $this;
-
     }
 
-    private
-    function addWhereHas(EloquentBuilder $builder , string $relation , string $searchTerm)
+    public function setRowId($args)
     {
-//        dd(explode())
-        $tmpRelation = explode(".", $relation);
-        $tmp = $relation;
-        foreach ($tmpRelation as $k => $v) {
-            if($k == (sizeof($tmpRelation) - 1)){
-                $builder->where($v , 'like' , "%" . strtolower($searchTerm) . "%");
-            } else {
-                $tmp = str_replace($v.".", "", $tmp);
-                $builder->orWhereHas($v, function (EloquentBuilder $relation) use ($tmp, $searchTerm) {
-                    $this->addWhereHas($relation, $tmp, $searchTerm);
-                });
-            }
+        if ($args instanceof \Closure) {
+            $this->rowIdClosure = $args;
+        } else {
+            $this->rowId = $args;
         }
 
-        dd($builder->toSql());
-        return $builder;
+        return $this;
+    }
+
+    public function test(...$string)
+    {
+        return $string;
     }
 }

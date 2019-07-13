@@ -4,6 +4,10 @@
     "type": "library",
     "require": {},
     "license": "MIT",
+    "require": {
+        "php": "^7.0",
+        "laravel/framework": "~5.5"
+    },
     "authors": [
         {
             "name": "cacing69",
