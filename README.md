@@ -2,7 +2,7 @@
 
 This package is created to handle server-side works of DataTables jQuery Plugin via AJAX option by using Eloquent ORM / Query Builder.
 
-This package only tested on Laravel 5.6, 5.7 & 5.8, so if you have any problem or any question you can call me or open new issues
+This package only tested on Laravel 5.6, 5.7 & 5.8 so if you have any problem or any question you can call me or open new issues
 
 ## Quick Installation
 ```
@@ -30,11 +30,10 @@ composer require bitstudio-id/bitdatatable
 <table id="table" class="table table-bordered table-striped">
   <thead>
   <tr>
-      <th>N</th>
-      <th>X</th>
-      <th>B</th>
-      <th>Z</th>
-      <th>P</th>
+      <th>#ID</th>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Email</th>
       <th>...</th>
   </tr>
   </thead>
@@ -118,8 +117,6 @@ public function dtbGetV2(Request $request)
   
   return $dtb->generate();
 }
-
+```
 ## License
 The MIT License (MIT). Please see License File for more information.
-```
-
