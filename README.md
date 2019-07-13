@@ -1,4 +1,4 @@
-#BITDataTable : jQuery DataTables for Laravel 5
+# BITDataTable : jQuery DataTables for Laravel 5
 
 ```
 composer require bitstudio-id/bitdatatable
