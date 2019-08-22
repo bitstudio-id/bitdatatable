@@ -155,7 +155,7 @@ class BITDataTable
         $this->searchMode = "start";
     }
 
-    public function getRowIndexName(): string
+    public function getRowIndexName()
     {
         return $this->rowIndexName;
     }
@@ -423,12 +423,12 @@ class BITDataTable
         return $this;
     }
 
-    public function getShowFiltered(): bool
+    public function getShowFiltered()
     {
         return $this->showFiltered;
     }
 
-    public function setShowFiltered(bool $param): void
+    public function setShowFiltered(bool $param)
     {
         $this->showFiltered = $param;
     }
@@ -456,18 +456,17 @@ class BITDataTable
 
     }
 
-    public function getRowIndex(): bool
+    public function getRowIndex()
     {
         return $this->rowIndex;
     }
 
-    public function setRowIndex(bool $state): void
+    public function setRowIndex(bool $state)
     {
         $this->rowIndex = $state;
     }
 
-    private
-    function getTotalDataByQuery(string $query): int
+    private function getTotalDataByQuery(string $query)
     {
         $_array = explode("limit" , $query);
         $_query = "select count(*) q from (" . $_array[0] . ") x";
@@ -476,8 +475,7 @@ class BITDataTable
         return $_data[0]->q;
     }
 
-    private
-    function getSql($model)
+    private function getSql($model)
     {
         $replace = function ($sql , $bindings) {
             $needle = '?';
@@ -497,14 +495,12 @@ class BITDataTable
         return $sql;
     }
 
-    public
-    function getSearchMode(): string
+    public function getSearchMode()
     {
         return $this->searchMode;
     }
 
-    public
-    function setSearchMode(string $mode)
+    public function setSearchMode(string $mode)
     {
         $this->searchMode = $mode;
         return $this;
