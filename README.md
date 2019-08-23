@@ -61,7 +61,7 @@ composer require bitstudio-id/bitdatatable
       columns: [
         {data: "id", name: "id", searchable: false, orderable: false},
         {data: "employee.code"},
-        {data: "name", name: "name"},
+        {data: "name", name: "user_name"},
         {data: "employee.role.name"},
         {data: "email"},
         {data: "action", searchable: false, orderable: false}, // use searchable: false, orderable: false for custom column
