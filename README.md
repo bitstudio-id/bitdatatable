@@ -98,6 +98,7 @@ public function dtbGetV2(Request $request)
 }
 ```
 
+## How to use logic on addCol
 ```
 $state = "admin";
 
