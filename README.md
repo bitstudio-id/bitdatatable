@@ -10,7 +10,7 @@ composer require bitstudio-id/bitdatatable
 ```
 
 ## Requirements
-- [PHP >= 7.0](http://php.net/)
+- [PHP >= 5.6.4](http://php.net/)
 - [Laravel >= 5.4](https://github.com/laravel/framework)
 - [jQuery DataTables v1.10.x](http://datatables.net/)
 
@@ -61,7 +61,7 @@ composer require bitstudio-id/bitdatatable
       columns: [
         {data: "id", name: "id", searchable: false, orderable: false},
         {data: "employee.code"},
-        {data: "name", name: "name"},
+        {data: "name", name: "user_name"},
         {data: "employee.role.name"},
         {data: "email"},
         {data: "action", searchable: false, orderable: false}, // use searchable: false, orderable: false for custom column
