@@ -162,8 +162,9 @@ class BITDataTable
 
     /*
      * DEFAULT CONSTRUCTOR IS EMPTY
+     * string $name
      * */
-    public function setRowIndexName(string $name)
+    public function setRowIndexName($name)
     {
         $this->rowIndexName = $name;
     }
@@ -428,7 +429,10 @@ class BITDataTable
         return $this->showFiltered;
     }
 
-    public function setShowFiltered(bool $param)
+    /*
+    * $oaram = bool
+    */
+    public function setShowFiltered($param)
     {
         $this->showFiltered = $param;
     }
@@ -445,7 +449,10 @@ class BITDataTable
         }
     }
 
-    private function sortDecorator(int $pos = 0)
+    /*
+    * $pos = int
+    */
+    private function sortDecorator($pos = 0)
     {
         if (!is_null($pos)) {
             $_column = $this->column;
@@ -461,12 +468,18 @@ class BITDataTable
         return $this->rowIndex;
     }
 
-    public function setRowIndex(bool $state)
+    /*
+    * $state = bool
+    */
+    public function setRowIndex($state)
     {
         $this->rowIndex = $state;
     }
 
-    private function getTotalDataByQuery(string $query)
+    /*
+    * $query = string
+    */
+    private function getTotalDataByQuery($query)
     {
         $_array = explode("limit" , $query);
         $_query = "select count(*) q from (" . $_array[0] . ") x";
@@ -500,7 +513,10 @@ class BITDataTable
         return $this->searchMode;
     }
 
-    public function setSearchMode(string $mode)
+    /*
+    * $mode = string
+    */
+    public function setSearchMode($mode)
     {
         $this->searchMode = $mode;
         return $this;
