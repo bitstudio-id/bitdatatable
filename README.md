@@ -143,9 +143,22 @@ public function dtbGetV2(Request $request)
 }
 ```
 
+### How to show index number for numbering on view
+```
+$dtb->setRowIndex(true);
+```
+this will append property DT_RowIndex on json response
+```
+columns: [
+        {data: "DT_RowIndex", name: "id" searchable: false, orderable: false},
+        ...
+        ]
+```
+dont forget to set searchable = false
+
 #### add value class attribute
 ```
-$dtb->addClass("text-danger");
+$dtb->addClass("text-danger"); //insert before genereate
 ```
 
 #### add value id attribute
