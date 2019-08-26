@@ -258,6 +258,8 @@ class BITDataTable
 
         if ($this->getRowIndex()) {
             $i = 1;
+            $this->request->length = !is_null($this->request->length) ? $this->request->length : 20;
+        	$this->request->start = !is_null($this->request->start) ? $this->request->start : 0;
             foreach ($data as $key => $item) {
                 $data[$key]->{$this->rowIndexName} = (($this->request->start / $this->request->length) * $this->request->length) + $i;
                 $i++;
