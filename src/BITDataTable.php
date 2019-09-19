@@ -152,7 +152,7 @@ class BITDataTable
         $this->rowIndexName = "DT_RowIndex";
         $this->rowIdName = "DT_RowId";
         $this->rowClassName = "DT_RowClass";
-        $this->searchMode = "start";
+        $this->searchMode = "have";
     }
 
     public function getRowIndexName()
