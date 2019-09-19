@@ -390,8 +390,9 @@ class BITDataTable
 
         try {
             if (!is_null($this->request->order)) {
+//                dd($this->request->order);
                 $this
-                    ->query
+                    ->q
                     ->orderBy(
                         $this->sortDecorator($this->request->order[0]["column"]) ,
                         $this->request->order[0]["dir"]
