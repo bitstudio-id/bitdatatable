@@ -329,22 +329,27 @@ class BITDataTable
                                 if (Str::contains($sourCol , ".")) {
                                     $tmp = explode("." , $sourCol);
 //                                    [$relationName, $relationAttribute] = explode('.', $sourCol);
+                    
+                                        $check_class = get_class($call);
 
-//                                    dd($relationAttribute, $tmp[1]);
-                                    if (sizeof($tmp) == 2) {
-                                        $call->orWhereHas($tmp[0] , function (EloquentBuilder $w1) use ($tmp , $searchTerm) {
-//                                            dd($tmp[1]);
-                                            $w1->where($tmp[1] , 'like' , strtolower($searchTerm) . "%");
-                                        });
-                                    } else if (sizeof($tmp) == 3) {
-                                        $call->orWhereHas($tmp[0] , function (EloquentBuilder $w1) use ($tmp , $searchTerm) {
-                                            $w1->whereHas($tmp[1] , function (EloquentBuilder $w2) use ($tmp , $searchTerm) {
-                                                $w2->where($tmp[2] , 'like' , strtolower($searchTerm) . "%");
-                                            });
-                                        });
-                                    } else {
+                                        if($check_class != "Illuminate\Database\Query\Builder") {
+                                            if (sizeof($tmp) == 2) {
+                                                $call->orWhereHas($tmp[0], function (EloquentBuilder $w1) use ($tmp, $searchTerm) {
+                                                    //                                            dd($tmp[1]);
+                                                    $w1->where($tmp[1], 'like', strtolower($searchTerm) . "%");
+                                                });
+                                            } else if (sizeof($tmp) == 3) {
+                                                $call->orWhereHas($tmp[0], function (EloquentBuilder $w1) use ($tmp, $searchTerm) {
+                                                    $w1->whereHas($tmp[1], function (EloquentBuilder $w2) use ($tmp, $searchTerm) {
+                                                        $w2->where($tmp[2], 'like', strtolower($searchTerm) . "%");
+                                                    });
+                                                });
+                                            } else {
+                                            }
+                                        } else  {
+                                            $call->where($tmp[1], 'like', strtolower($searchTerm) . "%");
+                                        }
 
-                                    }
 //                                        $call = $this->addWhereHas($call, $sourCol, $searchTerm);
 //                                        [$relationName, $relationAttribute] = explode('.', $sourCol);
 //                                        dd($call->toSql());
