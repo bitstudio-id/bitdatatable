@@ -334,10 +334,18 @@ class BITDataTable
 
                                         if($check_class != "Illuminate\Database\Query\Builder") {
                                             if (sizeof($tmp) == 2) {
-                                                $call->orWhereHas($tmp[0], function (EloquentBuilder $w1) use ($tmp, $searchTerm) {
-                                                    //                                            dd($tmp[1]);
-                                                    $w1->where($tmp[1], 'like', strtolower($searchTerm) . "%");
-                                                });
+                                                if($call instanceof QueryBuilder) {
+                                                    // dd($tmp);
+                                                    // $call->orWhere($tmp[0] , function (EloquentBuilder $w1) use ($tmp , $searchTerm) {
+            //                                            dd($tmp[1]);
+                                                    $call->where(implode(".", $tmp) , 'like' , strtolower($searchTerm) . "%");
+                                                    // });
+                                                } else {
+                                                    $call->orWhereHas($tmp[0] , function (EloquentBuilder $w1) use ($tmp , $searchTerm) {
+            //                                            dd($tmp[1]);
+                                                        $w1->where($tmp[1] , 'like' , strtolower($searchTerm) . "%");
+                                                    });
+                                                }
                                             } else if (sizeof($tmp) == 3) {
                                                 $call->orWhereHas($tmp[0], function (EloquentBuilder $w1) use ($tmp, $searchTerm) {
                                                     $w1->whereHas($tmp[1], function (EloquentBuilder $w2) use ($tmp, $searchTerm) {
