@@ -1,8 +1,6 @@
-# BITDataTable : jQuery DataTables for Laravel 5
+# BITDataTable : jQuery DataTables for Laravel
 
 This package is created to handle server-side works of DataTables jQuery Plugin via AJAX option by using Eloquent ORM / Query Builder.
-
-This package only tested on Laravel 5.4, 5.6, 5.6, 5.7 & 5.8 so if you have any problem or any question you can call me or open new issues
 
 ## Quick Installation
 ```
