@@ -374,14 +374,16 @@ class BITDataTable
 
 //                                        dd($relationAttribute);
                                 } else {
-                                    if (strtolower($this->searchMode) == "have") {
-                                        $call->orWhere(DB::raw("LOWER({$sourCol})") , 'like' , "%" . strtolower($searchTerm) . "%");
-                                    } else if (strtolower($this->searchMode) == "start") {
-                                        $call->orWhere(DB::raw("LOWER({$sourCol})") , 'like' , strtolower($searchTerm) . "%");
-                                    } else if (strtolower($this->searchMode) == "end") {
-                                        $call->orWhere(DB::raw("LOWER({$sourCol})") , 'like' , "%" . strtolower($searchTerm));
-                                    } else if (strtolower($this->searchMode) == "equal") {
-                                        $call->orWhere(DB::raw("LOWER({$sourCol})") , '=' , strtolower($searchTerm));
+                                    if(strlen($searchTerm) > 0) {
+                                        if (strtolower($this->searchMode) == "have") {
+                                            $call->orWhere(DB::raw("LOWER(".str_replace("->", ".", $sourCol).")") , 'like' , "%" . strtolower($searchTerm) . "%");
+                                        } else if (strtolower($this->searchMode) == "start") {
+                                            $call->orWhere(DB::raw("LOWER(".str_replace("->", ".", $sourCol).")") , 'like' , strtolower($searchTerm) . "%");
+                                        } else if (strtolower($this->searchMode) == "end") {
+                                            $call->orWhere(DB::raw("LOWER(".str_replace("->", ".", $sourCol).")") , 'like' , "%" . strtolower($searchTerm));
+                                        } else if (strtolower($this->searchMode) == "equal") {
+                                            $call->orWhere(DB::raw("LOWER(".str_replace("->", ".", $sourCol).")") , '=' , strtolower($searchTerm));
+                                        }
                                     }
                                 }
                             }
