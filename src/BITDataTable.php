@@ -1,7 +1,13 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Cacing
+ * This file is part of BITDataTable.
+ *
+ * (c) 2023 Ibnul Mutaki <ibnuul@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * User: cacing69
  * Date: 12/07/2019
  * Time: 15:00
  */
@@ -14,6 +20,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+
+/**
+ * An implementation BITDataTable
+ */
 class BITDataTable
 {
     private $data;
@@ -26,7 +36,7 @@ class BITDataTable
     private $request;
 
     /**
-     * $query : holder for count data.
+     * $q : holder for count data.
      *
      * @var Builder
      */
@@ -329,7 +339,7 @@ class BITDataTable
                                 if (Str::contains($sourCol , ".")) {
                                     $tmp = explode("." , $sourCol);
 //                                    [$relationName, $relationAttribute] = explode('.', $sourCol);
-                    
+
                                         $check_class = get_class($call);
 
                                         if($check_class != "Illuminate\Database\Query\Builder") {
@@ -428,8 +438,6 @@ class BITDataTable
                 ->offset($page);
         }
 
-//        dd($this->getSql($this->q));
-
         $this->data = $q
             ->get();
 
@@ -448,7 +456,7 @@ class BITDataTable
     }
 
     /*
-    * $oaram = bool
+    * $param = bool
     */
     public function setShowFiltered($param)
     {
