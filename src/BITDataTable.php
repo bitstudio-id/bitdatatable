@@ -241,7 +241,7 @@ class BITDataTable
                 $pos = strpos($sql, $needle);
                 if ($pos !== false) {
                     if (gettype($replace) === "string") {
-                        $replace = ' "'.addslashes($replace).'" ';
+                        $replace = ' \'' . addslashes($replace) . '\' ';
                     }
                     $sql = substr_replace($sql, $replace, $pos, strlen($needle));
                 }
@@ -249,6 +249,7 @@ class BITDataTable
             return $sql;
         };
         $sql = $replace($model->toSql(), $model->getBindings());
+        $sql = str_replace("::text","", $sql);
 
         return $sql;
     }
